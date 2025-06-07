@@ -20,54 +20,62 @@ const Navbar = ({ currentTab, onTabChange, userButton }) => {
           <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg shadow" />
           <span className="text-2xl font-bold tracking-tight text-indigo-700 font-sans">MyTodo</span>
         </div>
-        {/* Desktop Nav */}
-        <div className="hidden md:flex gap-2 items-center">
-          {NAV_TABS.map(tab => (
+        {/* Authenticated: Desktop Nav */}
+        <SignedIn>
+          <div className="hidden md:flex gap-2 items-center">
+            {NAV_TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => onTabChange(tab.key)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors duration-150 ${
+                  currentTab === tab.key
+                    ? 'bg-indigo-100 text-indigo-700 shadow'
+                    : 'text-gray-600 hover:bg-indigo-50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+            {userButton && <div className="ml-4">{userButton}</div>}
+          </div>
+          {/* Mobile Hamburger */}
+          <div className="md:hidden flex items-center">
             <button
-              key={tab.key}
-              onClick={() => onTabChange(tab.key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors duration-150 ${
-                currentTab === tab.key
-                  ? 'bg-indigo-100 text-indigo-700 shadow'
-                  : 'text-gray-600 hover:bg-indigo-50'
-              }`}
+              onClick={() => setOpen(!open)}
+              className="p-2 rounded hover:bg-indigo-50 focus:outline-none"
             >
-              {tab.label}
+              <svg className="h-7 w-7 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
-          ))}
-          {userButton && <div className="ml-4">{userButton}</div>}
-        </div>
-        {/* Mobile Hamburger */}
-        <div className="md:hidden flex items-center">
-          <button
-            onClick={() => setOpen(!open)}
-            className="p-2 rounded hover:bg-indigo-50 focus:outline-none"
-          >
-            <svg className="h-7 w-7 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
+          </div>
+        </SignedIn>
+        {/* Not Authenticated: Only Login Button */}
+        <SignedOut>
+          <SignInButton mode="modal" />
+        </SignedOut>
       </div>
-      {/* Mobile Menu */}
-      {open && (
-        <div className="md:hidden bg-white shadow px-4 pb-4 flex flex-col gap-2">
-          {NAV_TABS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => { onTabChange(tab.key); setOpen(false); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors duration-150 text-left ${
-                currentTab === tab.key
-                  ? 'bg-indigo-100 text-indigo-700 shadow'
-                  : 'text-gray-600 hover:bg-indigo-50'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-          {userButton && <div className="mt-2">{userButton}</div>}
-        </div>
-      )}
+      {/* Authenticated: Mobile Menu */}
+      <SignedIn>
+        {open && (
+          <div className="md:hidden bg-white shadow px-4 pb-4 flex flex-col gap-2">
+            {NAV_TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => { onTabChange(tab.key); setOpen(false); }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors duration-150 text-left ${
+                  currentTab === tab.key
+                    ? 'bg-indigo-100 text-indigo-700 shadow'
+                    : 'text-gray-600 hover:bg-indigo-50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+            {userButton && <div className="mt-2">{userButton}</div>}
+          </div>
+        )}
+      </SignedIn>
     </nav>
   );
 };
